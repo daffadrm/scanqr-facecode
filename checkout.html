@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Scanner</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+      #reader {
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+        border: 1px solid #ddd;
+      }
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>QR Code Scanner</h1>
+    <div id="reader"></div>
+    <p id="result">Scan a QR code to see the result here.</p>
+
+    <!-- Import HTML5 QR Code library -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+    <!-- QR Code Scanner Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        if (typeof Html5Qrcode !== "undefined") {
+          const qrCodeReader = new Html5Qrcode("reader");
+          const resultElement = document.getElementById("result");
+
+          qrCodeReader
+            .start(
+              { facingMode: "environment" },
+              { fps: 10, qrbox: { width: 250, height: 250 } },
+              (decodedText) => {
+                resultElement.innerText = `QR Code detected: ${decodedText}`;
+                console.log(`Decoded text: ${decodedText}`);
+                qrCodeReader.stop(); // Stop scanner after successful scan
+              },
+              (errorMessage) => {
+                console.warn(`QR Code no match: ${errorMessage}`);
+              }
+            )
+            .catch((err) => {
+              console.error(`Error starting QR Code Scanner: ${err}`);
+            });
+        } else {
+          console.error("Html5Qrcode is not loaded!");
+        }
+      });
+    </script>
+  </body>
+</html>
